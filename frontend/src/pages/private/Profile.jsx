@@ -10,6 +10,7 @@ const Profile = () => {
         const data = await response.json();
         setUserIPAddress(data.ip);
         console.log("User location fetched successfully");
+        localStorage.setItem("loggedUserIP", data.ip);
       } catch (error) {
         console.log("Failed to fetch user location:", error.message);
       }

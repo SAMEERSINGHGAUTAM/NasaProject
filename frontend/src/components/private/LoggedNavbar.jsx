@@ -13,7 +13,9 @@ const LoggedNavbar = () => {
 
   const handleLogOut = (e) => {
     localStorage.removeItem("loggedUserEmail");
+    localStorage.removeItem("loggedUserIP");
     handleSuccess("User logged out successfully");
+
     setTimeout(() => {
       navigate("/");
     }, 1000);
