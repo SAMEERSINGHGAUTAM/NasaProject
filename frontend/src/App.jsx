@@ -1,35 +1,67 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./pages/public/Home";
+import Login from "./pages/public/Login";
+import Signup from "./pages/public/Signup";
+import About from "./pages/public/About";
+import Navbar from "./components/public/Navbar";
+import PrivateRoutes from "./utils/PrivateRoutes";
+import PublicRoutes from "./utils/PublicRoutes";
+import LoggedNavbar from "./components/private/LoggedNavbar";
+import Profile from "./pages/private/Profile";
+import { ToastContainer } from "react-toastify";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: (
+        <PublicRoutes>
+          <Navbar />
+          <Home />
+        </PublicRoutes>
+      ),
+    },
+    {
+      path: "/signup",
+      element: (
+        <PublicRoutes>
+          <Navbar />
+          <Signup />
+        </PublicRoutes>
+      ),
+    },
+    {
+      path: "/login",
+      element: (
+        <PublicRoutes>
+          <Navbar />
+          <Login />
+        </PublicRoutes>
+      ),
+    },
+    {
+      path: "/about",
+      element: (
+        <PublicRoutes>
+          <Navbar />
+          <About />
+        </PublicRoutes>
+      ),
+    },
+    {
+      path: "/profile",
+      element: (
+        <PrivateRoutes>
+          <LoggedNavbar />
+          <Profile />
+          <ToastContainer />
+        </PrivateRoutes>
+      ),
+    },
+  ]);
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+  return <RouterProvider router={router}></RouterProvider>;
+};
 
-export default App
+export default App;
