@@ -4,6 +4,8 @@
 
 ### [Note: Ensure you have node and npm installed]
 
+### [Optional: Update your npm by running "npm i -g npm" in your terminal as administrator]
+
 ### \* Clone this github repository on your local machine
 
 ### \* open 2 terminals in your code editor
