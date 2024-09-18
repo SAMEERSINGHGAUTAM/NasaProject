@@ -24,7 +24,7 @@ const LoggedNavbar = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <img
-            src="https://r2.erweima.ai/imgcompressed/compressed_faba31e3cd615198449e6fdf2d4800e0.webp"
+            src="https://img.icons8.com/doodle/48/internet--v1.png"
             alt="Logo"
             className="h-10 rounded-lg animate-spin"
           />
