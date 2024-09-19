@@ -19,7 +19,7 @@ const Navbar = () => {
             className="h-10 rounded-lg animate-spin"
           />
           <span className="ml-2 text-white font-bold text-3xl">
-            NASA Project
+            Community Mapping
           </span>
         </div>
         <div className="md:hidden">
