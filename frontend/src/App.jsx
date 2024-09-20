@@ -9,6 +9,7 @@ import PrivateRoutes from "./utils/PrivateRoutes";
 import PublicRoutes from "./utils/PublicRoutes";
 import LoggedNavbar from "./components/private/LoggedNavbar";
 import Profile from "./pages/private/Profile";
+import Map from "./pages/private/Map";
 import { ToastContainer } from "react-toastify";
 
 const App = () => {
@@ -55,6 +56,16 @@ const App = () => {
         <PrivateRoutes>
           <LoggedNavbar />
           <Profile />
+          <ToastContainer />
+        </PrivateRoutes>
+      ),
+    },
+    {
+      path: "/map",
+      element: (
+        <PrivateRoutes>
+          <LoggedNavbar />
+          <Map />
           <ToastContainer />
         </PrivateRoutes>
       ),

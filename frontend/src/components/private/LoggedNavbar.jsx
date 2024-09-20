@@ -56,6 +56,11 @@ const LoggedNavbar = () => {
             </Link>
           </li>
           <li>
+            <Link to="/map" className="text-white">
+              Map
+            </Link>
+          </li>
+          <li>
             <button onClick={handleLogOut} className="text-white">
               Logout
             </button>
