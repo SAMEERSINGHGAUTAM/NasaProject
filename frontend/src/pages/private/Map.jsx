@@ -8,19 +8,17 @@ const Map = () => {
   const userMarkerRef = useRef(null);
   const [userLatitude, setUserLatitude] = useState(0);
   const [userLongitude, setUserLongitude] = useState(0);
-  const [eonetData, setEonetData] = useState([]);
-  const nasaAPIKEY = import.meta.env.REACT_APP_NASA_API_KEY;
+  const [eonetData, setEonetData] = useState();
+  const nasaAPI = "https://eonet.gsfc.nasa.gov/api/v3/events";
 
   const fetchNASAOENETData = async () => {
     try {
-      const response = await fetch(
-        `https://api.nasa.gov/planetary/earth-observations/events?api_key=${nasaAPIKEY}`
-      );
+      const response = await fetch(nasaAPI);
       if (!response.ok) {
         console.log(`Error fetching EOnet data: ${response.statusText}`);
       }
       const data = await response.json();
-      setEonetData(data);
+      setEonetData(data.events);
       console.log(eonetData);
     } catch (error) {
       console.log("Error fetching DATA:", error);
@@ -75,6 +73,8 @@ const Map = () => {
     userMarkerRef.current = leaflet
       .marker([userLatitude, userLongitude])
       .addTo(mapRef.current);
+
+    fetchNASAOENETData();
   }, [userLatitude, userLongitude]);
 
   return (
