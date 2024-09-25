@@ -1,12 +1,31 @@
 import React, { useEffect, useRef, useState } from "react";
 import leaflet from "leaflet";
+// import { FaLocationDot } from "react-icons/fa6";
 import "./Map.css";
 
 const Map = () => {
-  // const [userLatitude, setUserLatitude] = useState(null);
-  // const [userLongitude, setUserLongitude] = useState(null);
-
   const mapRef = useRef(null);
+  const userMarkerRef = useRef(null);
+  const [userLatitude, setUserLatitude] = useState(0);
+  const [userLongitude, setUserLongitude] = useState(0);
+  const [eonetData, setEonetData] = useState([]);
+  const nasaAPIKEY = import.meta.env.REACT_APP_NASA_API_KEY;
+
+  const fetchNASAOENETData = async () => {
+    try {
+      const response = await fetch(
+        `https://api.nasa.gov/planetary/earth-observations/events?api_key=${nasaAPIKEY}`
+      );
+      if (!response.ok) {
+        console.log(`Error fetching EOnet data: ${response.statusText}`);
+      }
+      const data = await response.json();
+      setEonetData(data);
+      console.log(eonetData);
+    } catch (error) {
+      console.log("Error fetching DATA:", error);
+    }
+  };
 
   useEffect(() => {
     if (!mapRef.current) {
@@ -47,6 +66,16 @@ const Map = () => {
       return () => navigator.geolocation.clearWatch(watchId);
     }
   }, []);
+
+  useEffect(() => {
+    if (userMarkerRef.current) {
+      mapRef.current.removeLayer(userMarkerRef.current);
+    }
+
+    userMarkerRef.current = leaflet
+      .marker([userLatitude, userLongitude])
+      .addTo(mapRef.current);
+  }, [userLatitude, userLongitude]);
 
   return (
     <div id="map" className="w-full h-full" style={{ height: "100vh" }}></div>
