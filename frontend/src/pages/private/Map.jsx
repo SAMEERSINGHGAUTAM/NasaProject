@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import leaflet from "leaflet";
-// import { FaLocationDot } from "react-icons/fa6";
+import { userIcon, fireIcon } from "../../utils/Icons"; // Assuming you have a fire icon
 import "./Map.css";
 
 const Map = () => {
@@ -8,20 +8,34 @@ const Map = () => {
   const userMarkerRef = useRef(null);
   const [userLatitude, setUserLatitude] = useState(0);
   const [userLongitude, setUserLongitude] = useState(0);
-  const [eonetData, setEonetData] = useState();
+  const [wildfireEvents, setWildfireEvents] = useState([]);
+
   const nasaAPI = "https://eonet.gsfc.nasa.gov/api/v3/events";
 
   const fetchNASAOENETData = async () => {
     try {
       const response = await fetch(nasaAPI);
       if (!response.ok) {
-        console.log(`Error fetching EOnet data: ${response.statusText}`);
+        throw new Error(`Error fetching EONET data: ${response.statusText}`);
       }
       const data = await response.json();
-      setEonetData(data.events);
-      console.log(eonetData);
+
+      // Filter by wildfires:
+      const filteredWildFires = data.events.filter(
+        (event) =>
+          event.categories.some(
+            (eventCategory) => eventCategory.id === "wildfires"
+          ) && event.geometry?.length > 0
+      );
+
+      const wildFireEventData = filteredWildFires.map((event) => ({
+        id: event.id,
+        coordinates: event.geometry[0].coordinates,
+      }));
+
+      setWildfireEvents(wildFireEventData);
     } catch (error) {
-      console.log("Error fetching DATA:", error);
+      console.error("Error fetching data:", error);
     }
   };
 
@@ -71,11 +85,32 @@ const Map = () => {
     }
 
     userMarkerRef.current = leaflet
-      .marker([userLatitude, userLongitude])
-      .addTo(mapRef.current);
+      .marker([userLatitude, userLongitude], {
+        icon: userIcon,
+      })
+      .addTo(mapRef.current).bindPopup(`
+        <div class="rounded-lg">
+          <p class="text-lg font-semibold">Your location!</p>
+        </div>
+      `);
 
     fetchNASAOENETData();
   }, [userLatitude, userLongitude]);
+
+  useEffect(() => {
+    // Create markers for each wildfire event
+    wildfireEvents.forEach((event) => {
+      leaflet
+        .marker(event.coordinates, {
+          icon: fireIcon, // Use your fire icon here
+        })
+        .addTo(mapRef.current).bindPopup(`
+        <div class="rounded-lg">
+          <p class="text-lg font-semibold">Wildfire Event</p>
+        </div>
+      `);
+    });
+  }, [wildfireEvents]);
 
   return (
     <div id="map" className="w-full h-full" style={{ height: "100vh" }}></div>
